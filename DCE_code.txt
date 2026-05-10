@@ -1,0 +1,45 @@
+
+
+**Descrptive ananlysis**
+ta gender Simple if Transparancy==1& Accurancy==1& Institution==1 & Hunman==1, chi col
+ta age Simple if Transparancy==1& Accurancy==1& Institution==1 & Hunman==1, chi col
+ta edu Simple if Transparancy==1& Accurancy==1& Institution==1 & Hunman==1, chi col
+ta eco Simple if Transparancy==1& Accurancy==1& Institution==1 & Hunman==1, chi col
+oneway Mach Simple if Transparancy==1& Accurancy==1& Institution==1 & Hunman==1, tabulate
+oneway low_t Simple if Transparancy==1& Accurancy==1& Institution==1 & Hunman==1, tabulate
+
+**Main effect**
+logit se i.Transparancy i.Accurancy i.Institution1 i.Hunman1, cl(ID) 
+coefplot , xline(0)  omitted baselevels drop(_cons) headings(0.Transparancy = "{bf:Transparancy}"  0.Accurancy  = "{bf:Accurancy }" 0.Institution1  = "{bf:Institution Level}" 0.Hunman1  = "{bf:Human Involvement }") 
+
+**Effect by the scenario***
+logit se i.Transparancy i.Accurancy i.Institution1 i.Hunman1 if Simple ==1, cl(ID) 
+estimates store D
+logit se i.Transparancy i.Accurancy i.Institution1 i.Hunman1 if Simple ==2, cl(ID)
+estimates store F
+coefplot (D, msymbol(D)) ///
+(F, msymbol(S)) ///
+, xline(0)  omitted baselevels drop(_cons) headings(0.Transparancy = "{bf:Transparancy}"  0.Accurancy  = "{bf:Accurancy }" 0.Institution1  = "{bf:Institution Level}" 0.Hunman1  = "{bf:Human Involvement }") 
+
+**Effect by the Institution***
+logit se i.Transparancy i.Accurancy i.Institution1 i.Human1  i.Transparancy#i.Institution1,  cl(ID)
+estimates store IA
+logit se i.Transparancy i.Accurancy i.Institution1 i.Human1  i.Accurancy#i.Institution1,  cl(ID)
+estimates store IB
+logit se i.Transparancy i.Accurancy i.Institution1 i.Human1  i.Human1#i.Institution1,  cl(ID)
+estimates store IC
+
+coefplot (IA IB IC), xline(0) omitted drop(_cons ) keep(*.Transparancy#1.Institution1 *.Accurancy#1.Institution1 *.Human1#1.Institution1)  headings(*1.Transparancy#1.Institution1 = "{bf:Transparancy}"  *1.Accurancy#1.Institution1  = "{bf:Accurancy }"  *1.Human1#1.Institution1  = "{bf:Human Involvement }") saving(1)
+coefplot (IA IB IC), xline(0) omitted drop(_cons ) keep(*.Transparancy#2.Institution1 *.Accurancy#2.Institution1 *.Human1#2.Institution1)  headings(*1.Transparancy#2.Institution1 = "{bf:Transparancy}"  *1.Accurancy#2.Institution1  = "{bf:Accurancy }"  *1.Human1#2.Institution1  = "{bf:Human Involvement }") saving(2)
+ gr combine 1.gph 2.gph
+
+
+**Sensitivity analysis**
+reg pre2 i.Transparancy i.Accurancy i.Institution1 i.Hunman1, cl(ID) 
+
+reg pre2 i.Transparancy i.Accurancy i.Institution1 i.Hunman1 if Simple ==1, cl(ID) 
+reg pre2 i.Transparancy i.Accurancy i.Institution1 i.Hunman1 if Simple ==2, cl(ID)
+
+reg pre2 i.Transparancy i.Accurancy i.Institution1 i.Human1  i.Transparancy#i.Institution1,  cl(ID)
+reg pre2 i.Transparancy i.Accurancy i.Institution1 i.Human1  i.Accurancy#i.Institution1,  cl(ID)
+reg pre2 i.Transparancy i.Accurancy i.Institution1 i.Human1  i.Human1#i.Institution1,  cl(ID)
