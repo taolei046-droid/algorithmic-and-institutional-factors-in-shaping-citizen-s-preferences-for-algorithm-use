@@ -2,3 +2,4 @@
 
 **Survey data:** DCE_data.xlsx
 **Stata code:** DCE_code.txt
+**Survey Design and coding book:** Survey Design and coding book.docx
